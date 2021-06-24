@@ -5,4 +5,5 @@ filters
 *.txt
 *.json
 *.session
+*.session-journal
 *.ps1
