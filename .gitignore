@@ -7,3 +7,4 @@ filters
 *.session
 *.session-journal
 *.ps1
+!requirements.txt
