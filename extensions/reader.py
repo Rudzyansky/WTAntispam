@@ -1,3 +1,5 @@
+from os import getenv
+
 from telethon import TelegramClient, events
 
 client: TelegramClient
@@ -9,19 +11,28 @@ async def init(c: TelegramClient):
     client = c
     ids = {await client.get_peer_id(i) for i in load_ids()}
 
+
+async def post_init(modules):
+    if getenv('CURRENT_DIALOGS'):
+        async with client:
+            # noinspection PyUnresolvedReferences
+            await modules['printer'].print_dialogs_ids(ids)
+            await client.disconnect()
+        exit()
+
+
+async def start():
     @client.on(events.NewMessage(chats=ids, incoming=True))
     async def handler(event):
         await event.message.mark_read()
 
-
-async def start():
     [await client.send_read_acknowledge(i) for i in ids]
 
 
 def load_ids():
     result = []
     try:
-        with open(f"reader.txt", encoding="utf-8") as f:
+        with open(f'reader.txt', encoding='utf-8') as f:
             for line in f:
                 i = line.rstrip()
                 try:

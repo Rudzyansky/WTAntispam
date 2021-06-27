@@ -16,6 +16,7 @@ except ImportError:
         #     WTAntispam/
         #         __main__.py (this file)
         #         extensions/    (cloned)
+        # noinspection PyPackages,PyUnresolvedReferences
         from . import extensions
     except ImportError:
         print('could not load the extensions module, does the directory exist '
@@ -28,6 +29,7 @@ async def main():
 
     try:
         await extensions.init(client)
+        print('Ready')
         async with client:
             await client.run_until_disconnected()
     finally:

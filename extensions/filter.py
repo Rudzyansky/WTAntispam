@@ -14,7 +14,7 @@ async def init(c: TelegramClient):
 
     # Load Assoc
     try:
-        with open("filters.json", encoding="utf-8") as f:
+        with open('filters.json', encoding='utf-8') as f:
             assoc = {int(k): frozenset(set(v)) for k, v in json.load(f).items()}
     except FileNotFoundError:
         return
@@ -23,15 +23,20 @@ async def init(c: TelegramClient):
     filters = {}
     for key in {item for sublist in assoc.values() for item in sublist}:
         try:
-            with open(f"filters/{key}.txt", encoding="utf-8") as f:
+            with open(f'filters/{key}.txt', encoding='utf-8') as f:
                 filters[key] = {line.rstrip() for line in f}
         except FileNotFoundError:
             filters[key] = set()
 
     # Cache
-    cache = {uniq: "(" + "|".join({w for u in uniq for w in filters[u]}) + ")" for uniq in assoc.values()}
+    cache = {uniq: '(' + '|'.join({w for u in uniq for w in filters[u]}) + ')' for uniq in assoc.values()}
 
-    # Handler
+
+async def post_init(_):
+    pass
+
+
+async def start():
     @client.on(events.NewMessage(chats=list(assoc.keys()), incoming=True))
     async def handler(event):
         if re.search(cache[assoc[event.message.chat_id]], event.message.text, re.IGNORECASE) is not None:
