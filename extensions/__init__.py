@@ -24,13 +24,15 @@ async def exec_func(mod, f_name, *args, **kwargs):
             await func()
 
 
-async def init(client: TelegramClient):
+async def exec_all(f_name, *args, **kwargs):
     for m in modules.values():
-        await exec_func(m, 'init', client)
+        await exec_func(m, f_name, *args, **kwargs)
 
-    for m in modules.values():
-        await exec_func(m, 'post_init', modules)
+
+async def init(client: TelegramClient):
+    await exec_all('init', client)
+
+    await exec_all('post_init', modules)
 
     async with client:
-        for m in modules.values():
-            await exec_func(m, 'start')
+        await exec_all('start')
