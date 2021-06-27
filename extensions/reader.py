@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from telethon import TelegramClient, events
 
 client: TelegramClient
@@ -13,10 +11,7 @@ async def init(c: TelegramClient):
 
     @client.on(events.NewMessage(chats=ids, incoming=True))
     async def handler(event):
-        msg = event.message
-        delay = format((datetime.utcnow() - event.message.date).seconds)
-        print(f"[{delay:3}] [{msg.chat_id:14}] {'' if msg.from_id is None else f'{msg.from_id}: '}{msg.message}")
-        await msg.mark_read()
+        await event.message.mark_read()
 
 
 async def start():
