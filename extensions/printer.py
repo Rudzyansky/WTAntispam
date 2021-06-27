@@ -11,13 +11,10 @@ async def init(c: TelegramClient):
     client = c
 
 
-async def post_init(_):
-    pass
-
-
-async def start():
+async def post_init():
     if getenv('SHOW_DIALOGS'):
-        await print_dialogs()
+        async with client:
+            await print_dialogs()
         await client.disconnect()
         exit()
 

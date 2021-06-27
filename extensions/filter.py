@@ -32,10 +32,6 @@ async def init(c: TelegramClient):
     cache = {uniq: '(' + '|'.join({w for u in uniq for w in filters[u]}) + ')' for uniq in assoc.values()}
 
 
-async def post_init(_):
-    pass
-
-
 async def start():
     @client.on(events.NewMessage(chats=list(assoc.keys()), incoming=True))
     async def handler(event):

@@ -1,5 +1,6 @@
 import importlib.util
 from glob import glob
+from inspect import signature
 from os.path import basename, join, dirname, isfile
 
 from telethon import TelegramClient
@@ -14,14 +15,22 @@ for name, path in {basename(f)[:-3]: f for f in glob(join(dirname(__file__), '*.
     spec.loader.exec_module(module)
 
 
-# noinspection PyUnresolvedReferences
+async def exec_func(mod, f_name, *args, **kwargs):
+    if hasattr(mod, f_name):
+        func = getattr(mod, f_name)
+        if len(signature(func).parameters):
+            await func(*args, **kwargs)
+        else:
+            await func()
+
+
 async def init(client: TelegramClient):
     for m in modules.values():
-        await m.init(client)
+        await exec_func(m, 'init', client)
 
     for m in modules.values():
-        await m.post_init(modules)
+        await exec_func(m, 'post_init', modules)
 
     async with client:
         for m in modules.values():
-            await m.start()
+            await exec_func(m, 'start')

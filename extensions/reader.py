@@ -15,9 +15,8 @@ async def init(c: TelegramClient):
 async def post_init(modules):
     if getenv('CURRENT_DIALOGS'):
         async with client:
-            # noinspection PyUnresolvedReferences
             await modules['printer'].print_dialogs_ids(ids)
-            await client.disconnect()
+        await client.disconnect()
         exit()
 
 
