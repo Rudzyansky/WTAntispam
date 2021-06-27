@@ -47,6 +47,8 @@ CURRENT_DIALOGS|1|Dialogs that affected by Reader extension
 ### Reader
 Automatically mark as read dialogs that ids in `reader.txt` file.
 
+ATTENTION. This may not work in channels with many subscribers.<br>See more https://github.com/LonamiWebs/Telethon/issues/652
+
 ### Filter
 Automatically remove messages (for all) from dialogs using filters.
 
